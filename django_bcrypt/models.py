@@ -29,9 +29,9 @@ from django.utils.encoding import smart_str
 
 # use Django's built-in constant time compare function if available
 try:
-    from django.utils.crypto import constant_time_compare
+    from django.utils.crypto import constant_time_compare as password_compare
 except ImportError:
-    constant_time_compare = lambda x,y: x == y
+    password_compare = lambda x,y: x == y
 
 
 def get_rounds():
@@ -74,9 +74,9 @@ def bcrypt_check_password(self, raw_password):
     should_change = False
     if self.password.startswith('bc$'):
         salt_and_hash = self.password[3:]
-        pwd_ok = constant_time_compare(bcrypt.hashpw(smart_str(raw_password), 
-                                                     salt_and_hash), 
-                                       salt_and_hash)
+        pwd_ok = password_compare(bcrypt.hashpw(smart_str(raw_password), 
+                                                salt_and_hash), 
+                                  salt_and_hash)
         if pwd_ok:
             rounds = int(salt_and_hash.split('$')[2])
             should_change = rounds != get_rounds()

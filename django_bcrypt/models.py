@@ -31,7 +31,7 @@ from django.utils.encoding import smart_str
 try:
     from django.utils.crypto import constant_time_compare as password_compare
 except ImportError:
-    password_compare = lambda x,y: x == y
+    from operator import eq as password_compare
 
 
 def get_rounds():
